@@ -41,7 +41,7 @@ mod tests {
         let input_2 = vec![Fr::from(1), Fr::from(2), Fr::from(3), Fr::zero()];
         let result_2 = x5_254_3::hash(&input_2);
         let input_3 = vec![Fr::from(1), Fr::from(2), Fr::from(3)];
-        let result_3 = x5_254_3::hash(&input_1);
+        let result_3 = x5_254_3::hash(&input_3);
         // Since I have not found any reference values yet, I will be happy with asserting
         // that equal inputs yield equal outputs, and different inputs yield different outputs.
         assert_ne!(result_1, result_2);
