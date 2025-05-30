@@ -4,3 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+ark-ff = "0.4"   
+ark-bn254 = "0.4"
+hex = "0.4"
+
