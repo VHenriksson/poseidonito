@@ -1,8 +1,12 @@
+//! The Poseidon configuration for the BN254 curve with 3 inputs and a 5-round sbox.
+//! Obtained from the reference implementation at https://extgit.isec.tugraz.at/krypto/hadeshash
+
 use ark_ff::Field;
 use ark_bn254::Fr;
 use crate::configurations::poseidon_config::PoseidonConfig;
 use crate::configurations::config_creation_helper_functions::{parse_constants, parse_matrix};
 
+/// The Poseidon configuration for the BN254 curve with 3 inputs and a 5-round sbox.
 pub struct ConfigX5_254_3;
 
 

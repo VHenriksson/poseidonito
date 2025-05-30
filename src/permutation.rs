@@ -1,8 +1,12 @@
+//! This module implements a general Poseidon permutation function. Given a concrete
+//! Poseidon configuration, the `perm` function applies the Poseidon permutation.
+
 use ark_ff::Field;
 
 use crate::configurations::poseidon_config::PoseidonConfig;
 
-
+/// A helper function to perform matrix-vector multiplication.
+/// This could probably be optimized.
 fn matrix_vector_mul<F: Field, const T: usize>(matrix: &[[F; T]; T], vector: &[F; T]) -> [F; T] {
     let mut result = [F::zero(); T];
     for i in 0..T {
@@ -13,7 +17,7 @@ fn matrix_vector_mul<F: Field, const T: usize>(matrix: &[[F; T]; T], vector: &[F
     result
 }
 
-
+/// Performs the Poseidon permutation on the input words.
 pub fn perm<F: Field, const T: usize, P: PoseidonConfig<F,T>>(input_words: &mut [F; T]) {
     let R_f = P::R_F/ 2;
     let mut round_constants_counter = 0;

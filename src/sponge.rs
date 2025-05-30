@@ -1,17 +1,39 @@
+//! This file defines a Sponge construction with a customizable permutation function.
+//! Currently, it is assumed to be used with the arkworks library for finite fields,
+//! and it is assumed that the state and input are arrays of arkworks finite field elements.
+//! 
+//! A future version may include more possibilities for the type of elements in the state
+//! and input. In particular, this could enable one to use the construction for more
+//! general types of hash function, not just Poseidon.
+
 use ark_ff::Field;
 
+/// A struct which satisfies the Permutation trait can be used as a permutation function
+/// for the Sponge construction.
+/// 
+/// It needs to implement the `apply` function, which takes a mutable reference to the state
+/// and permutes it in place. 
 pub trait Permutation<F : Field, const N: usize> {
     fn apply(state: &mut [F; N]);
 }
 
 
-
+/// A Sponge is the the state keeping structure of a sponge construction.
+///  
+/// It is parameterized by the field type `F`, the permutation function `P`, the rate `RATE`
+/// and the capacity `N`. Note that we require `Rate <= N` (unfortunately, this is enforced
+/// only at runtime).
+/// 
+/// A Sponge can do two things: absorb input and squeeze output. After each input or output,
+/// the state is permuted, to ensure that the input should be unguessable from the output.
 pub struct Sponge<F: Field, P: Permutation<F,N>, const RATE: usize, const N: usize> {
     state: [F; N],
     _marker: std::marker::PhantomData<P>,
 }
 
 impl<F:Field, P: Permutation<F, N>, const RATE: usize, const N: usize> Sponge<F, P, RATE, N> {
+
+    /// Creates a new Sponge with the given initial state.
     pub fn new(start_state: [F; N]) -> Self {
         assert!(RATE <= N, "RATE must be less than or equal to N");
         Sponge::<F, P, RATE, N> {
@@ -20,6 +42,7 @@ impl<F:Field, P: Permutation<F, N>, const RATE: usize, const N: usize> Sponge<F,
         }
     }
 
+    /// Absorbs `RATE` elements from the input into the sponge state.
     pub fn absorb(&mut self, input: &[F; RATE]) {
         for i in 0..RATE {
             self.state[i] += input[i];
@@ -27,6 +50,7 @@ impl<F:Field, P: Permutation<F, N>, const RATE: usize, const N: usize> Sponge<F,
         P::apply(&mut self.state);
     }
 
+    /// Squeezes `RATE` elements from the sponge state and returns them as an array.
     pub fn squeeze(&mut self) -> [F; RATE] {
         let output = unsafe {*(self.state[..RATE].as_ptr() as *const [F; RATE])}; 
         P::apply(&mut self.state);

@@ -1,6 +1,8 @@
 use ark_ff::{Field, PrimeField, BigInteger};
 use hex::{FromHex, encode};
 
+
+/// Converts a hex string to a field element.
 fn hex_to_field<F: Field>(hex_str: &str) -> Result<F, String> {
     if hex_str.trim().is_empty() {
         return Err("Empty hex string".to_string());
@@ -16,6 +18,8 @@ fn hex_to_field<F: Field>(hex_str: &str) -> Result<F, String> {
     Ok(F::from_random_bytes(&bytes).expect("Failed to convert hex to field element"))
 }
 
+/// Parses a string of hex-encoded field elements, one per line,
+/// into a vector of field elements.
 pub fn parse_constants<F: Field>(raw_constants: &str) -> Vec<F> {
     raw_constants
         .lines()
@@ -23,6 +27,8 @@ pub fn parse_constants<F: Field>(raw_constants: &str) -> Vec<F> {
         .collect()
 }
 
+/// Parses a matrix represented as an array of strings, where each string has `T` space-separated
+/// hex-encoded field elements.
 pub fn parse_matrix<F: Field, const T: usize>(rows: [&str; T]) -> [[F; T]; T] {
     let mut matrix = [[F::zero(); T]; T];
     for (i, row) in rows.iter().enumerate() {

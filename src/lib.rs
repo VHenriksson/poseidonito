@@ -1,3 +1,14 @@
+//! A library implementing the Poseidon hash function family.
+//! 
+//! At the moment, only one concrete Poseidon hash function is implemented, namely the
+//! x5_254_3 hash function.
+//! 
+//! In order to create another member of the Poseidon family, one needs to define a struct
+//! implementing the `PoseidonConfig` trait.
+//! 
+//! Note that this library is not cryptographically secure (since it e.g. does not consider
+//! side channel attacks), and it should thus not be used for cryptographic purposes.
+
 mod configurations;
 mod sponge;
 mod permutation;
