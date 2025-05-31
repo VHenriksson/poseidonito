@@ -1,14 +1,13 @@
-workspace = { members = ["profiling"] }
-
 [package]
-name = "poseidonito"
+name = "profiling"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
-ark-ff = "0.5"   
 ark-bn254 = "0.5"
-hex = "0.4"
+poseidonito = { path = ".." }
+flamegraph = "0.6"
 
 [profile.profiling]
 inherits = "release"
