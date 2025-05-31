@@ -22,10 +22,10 @@ pub trait PoseidonConfig<F: Field, const T: usize> {
     const R_P: usize;
 
     /// The MDS matrix used in the Poseidon permutation (the linear diffusion layer).
-    fn mds_matrix() -> [[F; T]; T];
+    fn mds_matrix() -> &'static [[F; T]; T];
 
     /// The round constants used in the Poseidon permutation.
-    fn round_constants() -> Vec<F>;
+    fn round_constants() -> &'static [F];
 
     /// The S-box function used in the Poseidon permutation.
     fn sbox(x: &F) -> F;

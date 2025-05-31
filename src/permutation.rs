@@ -3,6 +3,7 @@
 
 use ark_ff::Field;
 
+
 use crate::configurations::poseidon_config::PoseidonConfig;
 
 /// A helper function to perform matrix-vector multiplication.
@@ -16,6 +17,7 @@ fn matrix_vector_mul<F: Field, const T: usize>(matrix: &[[F; T]; T], vector: &[F
     }
     result
 }
+
 
 /// Performs the Poseidon permutation on the input words.
 pub fn perm<F: Field, const T: usize, P: PoseidonConfig<F,T>>(input_words: &mut [F; T]) {
@@ -59,9 +61,12 @@ pub fn perm<F: Field, const T: usize, P: PoseidonConfig<F,T>>(input_words: &mut 
 #[cfg(test)]
 mod tests {
 
+    use std::vec;
+
     use super::*;
     use ark_bn254::Fr;
     use ark_ff::{Zero, One};
+    use once_cell::sync::Lazy;
     use crate::configurations::config_x5_254_3::ConfigX5_254_3;
     use crate::configurations::config_creation_helper_functions::parse_constants;
 
@@ -71,14 +76,20 @@ mod tests {
         const R_F: usize = 2;
         const R_P: usize = 3;
 
-        fn mds_matrix() -> [[Fr; 3]; 3] {
-            [[Fr::one(), Fr::zero(), Fr::zero()],
-             [Fr::zero(), Fr::one(), Fr::zero()],
-             [Fr::zero(), Fr::zero(), Fr::one()]]
+        fn mds_matrix() -> &'static [[Fr; 3]; 3] {
+            static IDENTITY_MATRIX: Lazy<[[Fr; 3]; 3]> = Lazy::new(|| {
+                [[Fr::one(), Fr::zero(), Fr::zero()],
+                 [Fr::zero(), Fr::one(), Fr::zero()],
+                 [Fr::zero(), Fr::zero(), Fr::one()]]
+            });
+            &IDENTITY_MATRIX
         }
 
-        fn round_constants() -> Vec<Fr> {
-            vec![Fr::zero(); 3*(2 + 3)]
+        fn round_constants() -> &'static [Fr] {
+            static ZEROES: Lazy<Vec<Fr>> = Lazy::new(|| {
+                vec![Fr::zero(); 3*(2 + 3)]
+            });
+            &ZEROES
         }
 
         fn sbox(x: &Fr) -> Fr {
@@ -104,14 +115,21 @@ mod tests {
         const R_F: usize = 2;
         const R_P: usize = 3;
 
-        fn mds_matrix() -> [[Fr; 3]; 3] {
-            [[Fr::one(), Fr::zero(), Fr::zero()],
-             [Fr::zero(), Fr::one(), Fr::zero()],
-             [Fr::zero(), Fr::zero(), Fr::one()]]
+        fn mds_matrix() -> &'static [[Fr; 3]; 3] {
+            static IDENTITY_MATRIX: Lazy<[[Fr; 3]; 3]> = Lazy::new(|| {
+                [[Fr::one(), Fr::zero(), Fr::zero()],
+                 [Fr::zero(), Fr::one(), Fr::zero()],
+                 [Fr::zero(), Fr::zero(), Fr::one()]]
+            });
+            &IDENTITY_MATRIX
         }
 
-        fn round_constants() -> Vec<Fr> {
-            vec![Fr::zero(); 3*(2 + 3)]
+
+        fn round_constants() -> &'static [Fr] {
+            static ZEROES: Lazy<Vec<Fr>> = Lazy::new(|| {
+                vec![Fr::zero(); 3*(2 + 3)]
+            });
+            &ZEROES
         }
 
         fn sbox(x: &Fr) -> Fr {
@@ -135,15 +153,24 @@ mod tests {
         const R_F: usize = 2;
         const R_P: usize = 3;
 
-        fn mds_matrix() -> [[Fr; 3]; 3] {
-            [[Fr::one(), Fr::zero(), Fr::zero()],
-             [Fr::zero(), Fr::one(), Fr::zero()],
-             [Fr::zero(), Fr::zero(), Fr::one()]]
+        fn mds_matrix() -> &'static [[Fr; 3]; 3] {
+            static IDENTITY_MATRIX: Lazy<[[Fr; 3]; 3]> = Lazy::new(|| {
+                [[Fr::one(), Fr::zero(), Fr::zero()],
+                 [Fr::zero(), Fr::one(), Fr::zero()],
+                 [Fr::zero(), Fr::zero(), Fr::one()]]
+            });
+            &IDENTITY_MATRIX
         }
 
-        fn round_constants() -> Vec<Fr> {
-            let round_constants = vec![1,10,100, 2, 20, 200, 3, 30, 300, 4, 40, 400, 5, 50, 500];
-            round_constants.into_iter().map(Fr::from).collect()
+        fn round_constants() -> &'static [Fr] {
+            static ROUND_CONSTANTS: Lazy<Vec<Fr>> = Lazy::new(|| {
+                vec![Fr::from(1), Fr::from(10), Fr::from(100),
+                    Fr::from(2), Fr::from(20), Fr::from(200),
+                    Fr::from(3), Fr::from(30), Fr::from(300),
+                    Fr::from(4), Fr::from(40), Fr::from(400),
+                    Fr::from(5), Fr::from(50), Fr::from(500)]
+            });
+            &ROUND_CONSTANTS
         }
 
         fn sbox(x: &Fr) -> Fr {
@@ -164,14 +191,20 @@ mod tests {
         const R_F: usize = 2;
         const R_P: usize = 3;
 
-        fn mds_matrix() -> [[Fr; 3]; 3] {
-            [[Fr::zero(), Fr::one(), Fr::zero()],
-             [Fr::zero(), Fr::zero(), Fr::one()],
-             [Fr::from(2), Fr::zero(), Fr::zero()]]
+        fn mds_matrix() -> &'static [[Fr; 3]; 3] {
+            static MDS_MATRIX: Lazy<[[Fr; 3]; 3]> = Lazy::new(|| {
+                [[Fr::zero(), Fr::one(), Fr::zero()],
+                 [Fr::zero(), Fr::zero(), Fr::one()],
+                 [Fr::from(2), Fr::zero(), Fr::zero()]]
+            });
+            &MDS_MATRIX
         }
 
-        fn round_constants() -> Vec<Fr> {
-            vec![Fr::zero(); 3*(2 + 3)]
+        fn round_constants() -> &'static [Fr] {
+            static ZEROES: Lazy<Vec<Fr>> = Lazy::new(|| {
+                vec![Fr::zero(); 3*(2 + 3)]
+            });
+            &ZEROES
         }
 
         fn sbox(x: &Fr) -> Fr {

@@ -26,7 +26,7 @@ pub mod x5_254_3 {
             perm::<Fr, 3, ConfigX5_254_3>(state);
         }
     }
-    
+
     pub fn hash(input: &[ark_bn254::Fr]) -> [ark_bn254::Fr; 1] {
         // We probably want something other than all zeroes as the initial state.
         // However, I have not yet found any reference value, so all zeroes will be
